@@ -357,7 +357,7 @@ function accelerationsOf(state: VehicleState, inputs: StepInputs): Transfer {
   };
 }
 
-function telemetryOf(state: VehicleState, spec: TruckSpec, drivetrain: DrivetrainState): VehicleTelemetry {
+export function telemetryOf(state: VehicleState, spec: TruckSpec, drivetrain: DrivetrainState): VehicleTelemetry {
   const loads = axleLoads(spec, state.transfer);
   const drive = tractiveForce(spec.engine, spec.geometry.wheelRadius, state.tractor.forwardSpeed, 0, drivetrain);
   const hitch = hitchForces(state.tractor, state.trailer, spec);

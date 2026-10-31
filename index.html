@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ws: wss:; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="description" content="Semi-truck parking simulator with real physics: engine, tyres, trailer articulation and jackknife." />
+    <meta name="theme-color" content="#0d0f11" />
+    <title>PlayDrive · Truck parking simulator</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230d0f11'/%3E%3Cpath d='M3 20h14v-7h9l3 3v4h-3a2.5 2.5 0 0 0-5 0h-4a2.5 2.5 0 0 0-5 0H3z' stroke='%23ffb000' stroke-width='2' fill='none'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <main id="stage" aria-label="Simulator">
+      <canvas id="scene" aria-label="3D view of the yard and the truck"></canvas>
+    </main>
+    <aside id="hud" aria-label="Instrument panel"></aside>
+    <section id="overlay" aria-label="Menu">
+      <header class="masthead">
+        <h1 class="masthead__title">Play<em>Drive</em></h1>
+        <p class="masthead__tagline">Truck parking simulator · loading the yard…</p>
+      </header>
+    </section>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
