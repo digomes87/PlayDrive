@@ -61,6 +61,15 @@ jobs:
           TESTED_SHA: ${{ github.sha }}
       - name: Deploy main
         if: steps.merge.outputs.released == 'true'
-        run: gh workflow run deploy.yml --ref main
+        run: |
+          # A workflow file just pushed to main can take a moment to register; retry the dispatch.
+          for attempt in 1 2 3 4 5; do
+            if gh workflow run deploy.yml --ref main; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Could not dispatch deploy.yml" >&2
+          exit 1
         env:
           GH_TOKEN: ${{ github.token }}
