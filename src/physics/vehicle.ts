@@ -204,11 +204,13 @@ function axleLoads(spec: TruckSpec, transfer: Transfer): AxleLoads {
 /**
  * A demand that opposes motion, capped so it can at most stop the body's share carried by this
  * axle within the substep; without the cap a held brake makes the truck shiver around zero speed.
+ * The demand is a magnitude: braking works the same forwards and backwards.
  */
 function resisting(demand: number, speed: number, loadShare: number, substep: number): number {
-  if (speed === 0 || demand === 0) return 0;
+  const magnitude = Math.abs(demand);
+  if (speed === 0 || magnitude === 0) return 0;
   const capacity = ((loadShare / GRAVITY) * Math.abs(speed)) / substep;
-  return Math.max(-Math.sign(speed) * demand, -capacity);
+  return Math.max((-Math.sign(speed) * magnitude), -capacity);
 }
 
 interface BodyForces {
@@ -357,7 +359,7 @@ function accelerationsOf(state: VehicleState, inputs: StepInputs): Transfer {
   };
 }
 
-function telemetryOf(state: VehicleState, spec: TruckSpec, drivetrain: DrivetrainState): VehicleTelemetry {
+export function telemetryOf(state: VehicleState, spec: TruckSpec, drivetrain: DrivetrainState): VehicleTelemetry {
   const loads = axleLoads(spec, state.transfer);
   const drive = tractiveForce(spec.engine, spec.geometry.wheelRadius, state.tractor.forwardSpeed, 0, drivetrain);
   const hitch = hitchForces(state.tractor, state.trailer, spec);
@@ -395,8 +397,24 @@ export function stepVehicle(
     ...unpack(rungeKutta(pack(state), inputs, step), state.transfer),
     steering: inputs.steering,
   };
-  const next = clampArticulation(integrated, spec);
-  const transfer = accelerationsOf(next, inputs);
-  const settled = { ...next, transfer };
+  const braked = clampArticulation(integrated, spec);
+  const transfer = accelerationsOf(braked, inputs);
+  const settled = settleStandstill({ ...braked, transfer }, command);
   return { state: settled, drivetrain: shifted, telemetry: telemetryOf(settled, spec, shifted) };
+}
+
+/**
+ * A held brake leaves a limit cycle of a few cm/s around zero speed, because the opposing force
+ * flips sign each substep. When the driver is braking with no drive and the truck is nearly
+ * still, it is still: the wheels do not creep under a closed brake valve.
+ */
+function settleStandstill(state: VehicleState, command: VehicleCommand): VehicleState {
+  const driving = command.throttle > 0 && command.selector !== 'N';
+  const braking = command.brake > 0.2 || command.handbrake;
+  if (driving || !braking) return state;
+  const stopped = (body: BodyState): boolean =>
+    Math.abs(body.forwardSpeed) < 0.06 && Math.abs(body.leftSpeed) < 0.06 && Math.abs(body.yawRate) < 0.05;
+  if (!stopped(state.tractor) || !stopped(state.trailer)) return state;
+  const atRest = (body: BodyState): BodyState => ({ ...body, forwardSpeed: 0, leftSpeed: 0, yawRate: 0 });
+  return { ...state, tractor: atRest(state.tractor), trailer: atRest(state.trailer) };
 }

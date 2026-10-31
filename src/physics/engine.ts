@@ -58,10 +58,10 @@ export function overallRatio(engine: EngineSpecLike, drivetrain: DrivetrainState
   return engine.forwardRatios[Math.min(drivetrain.gear, topGear(engine)) - 1]! * engine.finalDrive;
 }
 
-/** 0 with the clutch open at a standstill, 1 once the clutch is fully engaged. */
+/** 0 with the clutch open at a standstill, 1 once the truck reaches the launch speed. */
 export const clutchEngagement = (engine: EngineSpecLike, forwardSpeed: number): number => {
-  const half = engine.launchSpeed / 2;
-  const share = (Math.abs(forwardSpeed) - half) / half;
+  const from = engine.launchSpeed * 0.3;
+  const share = (Math.abs(forwardSpeed) - from) / (engine.launchSpeed - from);
   return share <= 0 ? 0 : share >= 1 ? 1 : share * share * (3 - 2 * share);
 };
 
