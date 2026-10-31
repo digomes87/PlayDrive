@@ -155,7 +155,7 @@ export const DEFAULT_TRUCK_SPEC: TruckSpec = {
     trailerShare: 0.25,
     parkingForce: 45_000,
   },
-  hitch: { stiffness: 5.0e7, damping: 8.8e5, contactAngle: degToRad(88) },
+  hitch: { stiffness: 1.0e7, damping: 4.0e5, contactAngle: degToRad(88) },
   articulation: { warning: degToRad(55), fail: degToRad(80) },
   drag: { rollingCoefficient: 0.008, dragArea: 6.0 },
   fineControlFactor: 0.25,

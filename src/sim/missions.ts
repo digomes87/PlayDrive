@@ -20,15 +20,15 @@ export const MISSIONS: readonly Mission[] = [
   {
     id: 'free',
     site: siteById('yard'),
-    start: { position: vec2(0, -10), heading: degToRad(90) },
+    start: { position: vec2(0, -14), heading: degToRad(90) },
     goal: null,
     parSeconds: 0,
   },
   {
     id: 'dock',
     site: siteById('dock'),
-    start: { position: vec2(1.2, 30), heading: degToRad(90) },
-    goal: { zone: parkZone(vec2(0, -1.6), 90, 0.4), holdSeconds: 1.5 },
+    start: { position: vec2(0.6, 25), heading: degToRad(90) },
+    goal: { zone: parkZone(vec2(0, -1.6), 90, 0.5), holdSeconds: 1.5 },
     parSeconds: 120,
   },
   {
