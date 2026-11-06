@@ -31,7 +31,7 @@ export const STILL: Transfer = { tractor: 0, trailer: 0 };
 export interface VehicleState {
   readonly tractor: BodyState;
   readonly trailer: BodyState;
-  /** Steering angle, positive to the left, rad. */
+  /** Steering angle, positive to the right, rad. */
   readonly steering: number;
   readonly transfer: Transfer;
 }
@@ -41,7 +41,7 @@ export interface VehicleCommand {
   readonly throttle: number;
   /** 0 to 1, service brake pedal. */
   readonly brake: number;
-  /** -1 to 1, positive steers left. */
+  /** -1 to 1, positive steers right. */
   readonly steer: number;
   readonly fine: boolean;
   readonly handbrake: boolean;

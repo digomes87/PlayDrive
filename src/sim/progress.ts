@@ -72,7 +72,7 @@ export function track(progress: Progress, inputs: StepInputs): Progress {
         : progress.harshStops,
     lastHarshAt: -state.transfer.tractor > HARSH_DECELERATION ? progress.elapsed : progress.lastHarshAt,
   };
-  if (articulation >= spec.articulation.fail) {
+  if (articulation >= spec.articulation.fail && mission.goal !== null) {
     return { ...next, outcome: 'failed', message: 'jackknifed' };
   }
   const goal = mission.goal;

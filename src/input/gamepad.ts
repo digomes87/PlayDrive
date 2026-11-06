@@ -44,13 +44,12 @@ export function readPad(
   layout: PadLayout,
   curve: ResponseCurve,
 ): DeviceInput {
-  const steer = shapeAxis(pad.axes[layout.steerAxis] ?? 0, curve);
   return {
     axes: {
       throttle: pad.buttons[layout.throttleButton]?.value ?? 0,
       brake: pad.buttons[layout.brakeButton]?.value ?? 0,
-      /** Stick right is positive on the pad, but a right turn is a negative steer command. */
-      steer: -steer,
+      /** Stick right is positive on the pad, and a right turn is a positive steer command. */
+      steer: shapeAxis(pad.axes[layout.steerAxis] ?? 0, curve),
     },
     fine: isDown(pad, layout.fineButton),
     horn: isDown(pad, layout.hornButton),

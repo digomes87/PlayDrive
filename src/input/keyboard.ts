@@ -30,7 +30,7 @@ export class Keyboard {
       axes: {
         throttle: this.pedal('KeyW', 'ArrowUp'),
         brake: this.pedal('KeyS', 'ArrowDown'),
-        steer: (this.held.has('KeyA') || this.held.has('ArrowLeft') ? 1 : 0) - (this.held.has('KeyD') || this.held.has('ArrowRight') ? 1 : 0),
+        steer: (this.held.has('KeyD') || this.held.has('ArrowRight') ? 1 : 0) - (this.held.has('KeyA') || this.held.has('ArrowLeft') ? 1 : 0),
       },
       fine: this.held.has('ShiftLeft') || this.held.has('ShiftRight'),
       horn: this.held.has('KeyH'),

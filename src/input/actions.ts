@@ -7,7 +7,7 @@ export interface Axes {
   readonly throttle: number;
   /** 0 to 1, service brake. */
   readonly brake: number;
-  /** -1 to 1, positive steers left. */
+  /** -1 to 1, positive steers right. */
   readonly steer: number;
 }
 
