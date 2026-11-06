@@ -4,7 +4,34 @@ import { DEFAULT_TRUCK_SPEC } from '../src/truckSpec';
 import { missionById } from '../src/sim/missions';
 import { scoreOf } from '../src/sim/scoring';
 import { Replay } from '../src/sim/replay';
+import { Session } from '../src/sim/session';
+import { articulationOf } from '../src/physics/vehicle';
+import { FIXED_STEP } from '../src/physics/units';
 import { drive } from './autopilot';
+
+const foldHard = (missionId: 'free' | 'dock', seconds: number): Session => {
+  const session = new Session(missionById(missionId), DEFAULT_TRUCK_SPEC);
+  for (let index = 0; index < Math.round(seconds / FIXED_STEP); index += 1) {
+    session.advance(FIXED_STEP, { throttle: 0.4, brake: 0, steer: 1, fine: false, handbrake: false, selector: 'R' });
+    if (Math.abs(articulationOf(session.state.vehicle)) > DEFAULT_TRUCK_SPEC.articulation.fail) break;
+  }
+  return session;
+};
+
+describe('jackknife ruling', () => {
+  it('fails a mission with a goal when the trailer folds past the limit', () => {
+    const session = foldHard('dock', 20);
+    expect(Math.abs(articulationOf(session.state.vehicle))).toBeGreaterThan(DEFAULT_TRUCK_SPEC.articulation.fail);
+    expect(session.progress.outcome).toBe('failed');
+    expect(session.progress.message).toBe('jackknifed');
+  });
+
+  it('never raises the failure screen in free training', () => {
+    const session = foldHard('free', 20);
+    expect(Math.abs(articulationOf(session.state.vehicle))).toBeGreaterThan(DEFAULT_TRUCK_SPEC.articulation.fail);
+    expect(session.progress.outcome).toBe('running');
+  });
+});
 
 describe('dock mission', () => {
   it('is parked by the autopilot without a single collision', () => {

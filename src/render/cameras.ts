@@ -6,8 +6,9 @@ export type CameraMode = 'chase' | 'cab' | 'top' | 'trailer';
 const ORDER: readonly CameraMode[] = ['chase', 'cab', 'top', 'trailer'];
 
 const CHASE = { back: 13, up: 6.5, ahead: 9 };
-const CAB = { along: 1.9, up: 3.0 };
-const CAB_LOOK_AHEAD = 30;
+/** Eye at windshield height, just ahead of the glass: a dashcam. Inside the cab box it is black. */
+const CAB = { along: 3.6, up: 2.7 };
+const CAB_LOOK_AHEAD = 40;
 const TOP_HEIGHT = 34;
 const TOP_TILT = 7;
 const TRAILER_VIEW = { back: 11, up: 5.5 };
@@ -53,7 +54,7 @@ export class CameraRig {
     const tractor = subject.tractor;
     const forward = new Vector3(Math.cos(tractor.heading), 0, Math.sin(tractor.heading));
     if (this.current === 'cab') {
-      this.aimedAt.set(tractor.x + forward.x * CAB_LOOK_AHEAD, 1.4, tractor.z + forward.z * CAB_LOOK_AHEAD);
+      this.aimedAt.set(tractor.x + forward.x * CAB_LOOK_AHEAD, 0.8, tractor.z + forward.z * CAB_LOOK_AHEAD);
       return new Vector3(tractor.x + forward.x * CAB.along, CAB.up, tractor.z + forward.z * CAB.along);
     }
     if (this.current === 'top') {

@@ -2,7 +2,7 @@
 import type { TruckSpec } from '../truckSpec';
 
 /**
- * One fixed step of the steering column. The command is unitless, positive to the left;
+ * One fixed step of the steering column. The command is unitless, positive to the right;
  * the returned angle follows the same convention.
  */
 export function stepSteering(
@@ -23,7 +23,7 @@ export function stepSteering(
   return Math.min(Math.max(angle + change, -spec.steering.maxAngle), spec.steering.maxAngle);
 }
 
-/** Wheel angles of the Ackermann geometry; left turn (positive angle) puts the left wheel inside. */
+/** Wheel angles of the Ackermann geometry; a positive angle puts the +z-side wheel inside. */
 export function ackermann(
   angle: number,
   wheelbase: number,
